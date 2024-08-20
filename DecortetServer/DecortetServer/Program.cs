@@ -40,15 +40,17 @@ namespace DecortetServer
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            //builder.Services.AddCors(options =>
-            //{
-            //    var frontendUrl = config.GetValue<string>("fontend_url");
+            builder.Services.AddCors(options =>
+            {
+                var frontendUrl = config.GetValue<string>("fontend_url");
 
-            //    options.AddDefaultPolicy(builder =>
-            //    {
-            //        builder.WithOrigins(frontendUrl).AllowAnyMethod().AllowAnyHeader();
-            //    });
-            //});
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins("https://66c48d0147eb410df3433a54--roaring-cucurucho-ca9ff3.netlify.app")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+            });
 
             var app = builder.Build();
 
@@ -67,7 +69,7 @@ namespace DecortetServer
 
             app.UseHttpsRedirection();
 
-            //app.UseCors();
+            app.UseCors();
 
             app.UseAuthorization();
 
