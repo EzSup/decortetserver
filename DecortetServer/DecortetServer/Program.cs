@@ -46,7 +46,7 @@ namespace DecortetServer
 
                 options.AddDefaultPolicy(builder =>
                 {
-                    builder.WithOrigins("https://66c48d0147eb410df3433a54--roaring-cucurucho-ca9ff3.netlify.app")
+                    builder.AllowAnyOrigin()
                         .AllowAnyMethod()
                         .AllowAnyHeader();
                 });
