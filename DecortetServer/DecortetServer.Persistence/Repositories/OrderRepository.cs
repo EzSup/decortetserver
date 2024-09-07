@@ -1,4 +1,5 @@
-﻿using DecortetServer.Core.Interfaces.Repositories;
+﻿using DecortetServer.Core.DTOs;
+using DecortetServer.Core.Interfaces.Repositories;
 using DecortetServer.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -35,6 +36,54 @@ namespace DecortetServer.Persistense.Repositories
         public async Task<IEnumerable<Order>> GetAll()
         {
             return await _dbContext.Orders.AsNoTracking().ToListAsync();
+        }
+
+        public async Task<IEnumerable<Order>> GetByFilter(string? clientName = "", 
+            string? phone = "", string? email = "", string? region = "", string? town = "", 
+            string? address = "", int minSum = int.MinValue, int maxSum = int.MaxValue,params string[] hasProducts)
+        {
+            var query = _dbContext.Orders
+                .Include(x => x.ProductOrders)
+                .ThenInclude(x => x.Product)
+                .AsNoTracking();
+
+            if (!String.IsNullOrEmpty(clientName))
+            {
+                query = query.Where(order => order.ClientName.ToLower().Contains(clientName.ToLower()));
+            }
+            if (!String.IsNullOrEmpty(phone))
+            {
+                query = query.Where(order => order.Phone.Contains(phone.Trim()));
+            }
+            if (!String.IsNullOrEmpty(email))
+            {
+                query = query.Where(order => order.Email.Contains(email));
+            }
+            if (!String.IsNullOrEmpty(region))
+            {
+                query = query.Where(order => order.Region.ToLower().Contains(region.ToLower()));
+            }
+            if (!String.IsNullOrEmpty(town))
+            {
+                query = query.Where(order => order.Town.ToLower().Contains(town.ToLower()));
+            }
+            if (!String.IsNullOrEmpty(address))
+            {
+                query = query.Where(order => order.Address.ToLower().Contains(address.ToLower()));
+            }
+            if (maxSum >= minSum)
+            {
+                query = query.Where(order => order.totalSum >= minSum && order.totalSum <= maxSum);
+            }
+
+            if (hasProducts.Any())
+            {
+                query = query.Where(order => 
+                    hasProducts.All(productName => 
+                        order.ProductOrders.Any(po => po.Product.Name == productName)));
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<Order?> GetById(int id)

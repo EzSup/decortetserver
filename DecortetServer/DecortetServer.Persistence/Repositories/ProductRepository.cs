@@ -39,7 +39,31 @@ namespace DecortetServer.Persistense.Repositories
 
         public async Task<Product?> GetById(int id)
         {
-            return await _dbContext.Products.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+            return await _dbContext.Products.Include(pr => pr.ProductOrders).ThenInclude(po => po.Order).AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<IEnumerable<Product>> GetByFilter(bool? available = null, string? name = "", string? underheader = "",  decimal minPrice = 0, decimal maxPrice = 10000)
+        {
+            var query = _dbContext.Products.AsNoTracking();
+
+            if(available != null)
+            {
+                query = query.Where(item => item.Available == available);
+            }
+            if (!String.IsNullOrEmpty(name))
+            {
+                query = query.Where(item => item.Name.ToLower().Contains(name.ToLower()));
+            }
+            if (!String.IsNullOrEmpty(underheader))
+            {
+                query = query.Where(item => item.Underheader.ToLower().Contains(underheader.ToLower()));
+            }
+            if (minPrice <= maxPrice)
+            {
+                query = query.Where(item => item.Price >= minPrice);
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<bool> Update(Product obj)

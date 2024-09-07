@@ -22,12 +22,12 @@ namespace DecortetServer.Persistense.Configurations
             builder.HasOne(p => p.Product)
                 .WithMany(po => po.ProductOrders)
                 .HasForeignKey(po => po.ProductId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(p => p.Order)
                 .WithMany(po => po.ProductOrders)
                 .HasForeignKey(po => po.OrderId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction);
 
         }
     }

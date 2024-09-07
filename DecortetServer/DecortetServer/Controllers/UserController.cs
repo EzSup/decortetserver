@@ -21,12 +21,13 @@ namespace DecortetServer.Controllers
 
         }
 
-        [HttpGet(Name = "GetProducts")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> Get()
         {
             try
             {
-                return Ok((await _productService.GetAll()).ToList());
+                var products = await _productService.GetByFilter(true);
+                return Ok(products);
             }
             catch
             {

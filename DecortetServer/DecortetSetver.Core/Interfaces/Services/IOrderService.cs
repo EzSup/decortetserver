@@ -11,5 +11,10 @@ namespace DecortetServer.Core.Interfaces.Services
     public interface IOrderService
     {
         Task<int> CreateOrder(OrderCreateRequest obj);
+        Task<IEnumerable<OrderResponse>> GetAll();
+        Task<bool> DeleteOrder(int id);
+        Task<IEnumerable<OrderResponse>> GetByFilter(string? clientName = "",
+            string? phone = "", string? email = "", string? region = "", string? town = "",
+            string? address = "", int minSum = int.MinValue, int maxSum = int.MaxValue, params string[] hasProducts);
     }
 }

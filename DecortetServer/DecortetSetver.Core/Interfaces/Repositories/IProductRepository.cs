@@ -14,5 +14,6 @@ namespace DecortetServer.Core.Interfaces.Repositories
         Task<int> Create(Product obj);
         Task<bool> Delete(int id);
         Task<bool> Update(Product obj);
+        Task<IEnumerable<Product>> GetByFilter(bool? available = null, string? name = "", string? underheader = "", decimal minPrice = 0, decimal maxPrice = decimal.MaxValue);
     }
 }

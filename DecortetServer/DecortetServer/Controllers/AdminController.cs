@@ -20,6 +20,26 @@ namespace DecortetServer.Controllers
             _productService = productService;
         }
 
+        [HttpGet]
+        public async Task<ActionResult> GetAllOrders()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Помилка в переданих даних!");
+            }
+            return Ok(await _orderService.GetAll());
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Помилка в переданих даних!");
+            }
+            return Ok(await _productService.GetByFilter());
+        }
+
         [HttpPost]
         public async Task<ActionResult> CreateProduct([FromForm] ProductCreateRequest request)
         {
@@ -46,7 +66,22 @@ namespace DecortetServer.Controllers
             {
                 return BadRequest("Помилка в виконанні!");
             }
-            return Ok("Успішно додано!");
+            return Ok("Успішно оновлено!");
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteProduct(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Помилка в переданих даних!");
+            }
+            var result = await _productService.DeleteProduct(id);
+            if (!result)
+            {
+                return BadRequest("Помилка в виконанні!");
+            }
+            return Ok("Успішно видалено!");
         }
     }
 }

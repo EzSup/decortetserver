@@ -54,7 +54,7 @@ namespace DecortetServer
 
             var app = builder.Build();
 
-            using(var scope = app.Services.CreateScope())
+            using (var scope = app.Services.CreateScope())
             {
                 var context = scope.ServiceProvider.GetRequiredService<ShopDbContext>();
                 context.Database.Migrate();

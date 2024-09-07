@@ -33,6 +33,13 @@ namespace DecortetServer.Core.Services
             return await _repository.Update(request);
         }
 
+        public async Task<bool> DeleteProduct(int id) => await _repository.Delete(id);
+
         public async Task<IEnumerable<Product>> GetAll() => await _repository.GetAll();
+
+        public async Task<IEnumerable<Product>> GetByFilter(bool? available = null, string? name = "", string? underheader = "", decimal minPrice = 0, decimal maxPrice = decimal.MaxValue)
+        {
+            return await _repository.GetByFilter(available, name, underheader, minPrice, maxPrice);
+        }
     }
 }
